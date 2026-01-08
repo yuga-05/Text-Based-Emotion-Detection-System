@@ -2,9 +2,6 @@ import os
 import pandas as pd
 from datasets import load_dataset
 
-# ----------------------------
-# 1. Folder setup
-# ----------------------------
 BASE_DIR = "emotion_detection"
 RAW_DIR = os.path.join(BASE_DIR, "data", "raw")
 PROCESSED_DIR = os.path.join(BASE_DIR, "data", "processed")
@@ -12,12 +9,8 @@ PROCESSED_DIR = os.path.join(BASE_DIR, "data", "processed")
 os.makedirs(RAW_DIR, exist_ok=True)
 os.makedirs(PROCESSED_DIR, exist_ok=True)
 
-# ----------------------------
-# 2. Load GoEmotions dataset
-# ----------------------------
 dataset = load_dataset("go_emotions")
 
-# Emotion mapping in GoEmotions
 GO_EMOTION_MAP = {
     0: "admiration", 1: "amusement", 2: "anger", 3: "annoyance",
     4: "approval", 5: "caring", 6: "confusion", 7: "curiosity",
@@ -38,9 +31,6 @@ TARGET_EMOTIONS = {
     "disgust": 5
 }
 
-# ----------------------------
-# 3. Filter function
-# ----------------------------
 def filter_emotions(split):
     texts = []
     labels = []
@@ -51,28 +41,22 @@ def filter_emotions(split):
             if emotion in TARGET_EMOTIONS:
                 texts.append(item["text"])
                 labels.append(TARGET_EMOTIONS[emotion])
-                break  # ensure single-label classification
+                break 
 
     return pd.DataFrame({
         "text": texts,
         "label": labels
     })
 
-# ----------------------------
-# 4. Process splits
-# ----------------------------
 train_df = filter_emotions(dataset["train"])
 valid_df = filter_emotions(dataset["validation"])
 test_df  = filter_emotions(dataset["test"])
 
-# ----------------------------
-# 5. Save CSV files
-# ----------------------------
 train_df.to_csv(os.path.join(PROCESSED_DIR, "train.csv"), index=False)
 valid_df.to_csv(os.path.join(PROCESSED_DIR, "valid.csv"), index=False)
 test_df.to_csv(os.path.join(PROCESSED_DIR, "test.csv"), index=False)
 
-print("✅ Dataset collection & filtering completed")
+print("Dataset collection & filtering completed")
 print("Train size:", len(train_df))
 print("Valid size:", len(valid_df))
 print("Test size :", len(test_df))
