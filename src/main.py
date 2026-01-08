@@ -6,26 +6,15 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-# -------------------------------------------------
-# Fix Python path so FastAPI can see src/
-# -------------------------------------------------
 CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(CURRENT_DIR)
 
-from predict_core import predict_emotion  # ✅ now works
+from predict_core import predict_emotion
 
-# -------------------------------------------------
-# FastAPI app
-# -------------------------------------------------
 app = FastAPI(title="Emotion Detection App")
-
-# Static files & templates
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
-# -------------------------------------------------
-# Routes
-# -------------------------------------------------
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     return templates.TemplateResponse(
