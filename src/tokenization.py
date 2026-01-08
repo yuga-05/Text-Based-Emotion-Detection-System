@@ -4,23 +4,14 @@ import torch
 from torch.utils.data import Dataset
 from transformers import BertTokenizer
 
-# ----------------------------
-# Project paths
-# ----------------------------
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(BASE_DIR, "data", "processed")
 
-# ----------------------------
-# Load tokenizer
-# ----------------------------
 TOKENIZER_NAME = "bert-base-uncased"
 tokenizer = BertTokenizer.from_pretrained(TOKENIZER_NAME)
 
 MAX_LEN = 128
 
-# ----------------------------
-# Custom Dataset class
-# ----------------------------
 class EmotionDataset(Dataset):
     def __init__(self, csv_file):
         self.data = pd.read_csv(csv_file)
@@ -45,15 +36,11 @@ class EmotionDataset(Dataset):
             "attention_mask": encoding["attention_mask"].squeeze(0),
             "labels": torch.tensor(label, dtype=torch.long)
         }
-
-# ----------------------------
-# Create datasets
-# ----------------------------
 train_dataset = EmotionDataset(os.path.join(DATA_DIR, "train.csv"))
 valid_dataset = EmotionDataset(os.path.join(DATA_DIR, "valid.csv"))
 test_dataset  = EmotionDataset(os.path.join(DATA_DIR, "test.csv"))
 
-print("✅ Tokenization completed")
+print("Tokenization completed")
 print("Train samples:", len(train_dataset))
 print("Valid samples:", len(valid_dataset))
 print("Test samples :", len(test_dataset))
