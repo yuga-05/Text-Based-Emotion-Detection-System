@@ -28,10 +28,10 @@ model = BertForSequenceClassification.from_pretrained(MODEL_DIR)
 model.to(device)
 model.eval()
 
-print("✅ Emotion detection ready (type 'exit' to quit)")
+print("Emotion detection ready (type 'exit' to quit)")
 
 while True:
-    text = input("\n📝 Text: ")
+    text = input("\n Text: ")
 
     if text.lower() == "exit":
         break
